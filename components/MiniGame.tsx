@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from './Button';
-import { Check } from 'lucide-react';
+import { Star } from 'lucide-react';
 import { useConfig } from '../context/ConfigContext';
 
 interface MiniGameProps {
   onFinish: () => void;
 }
 
-type BlockType = 'dirt' | 'stone' | 'diamond' | 'tnt' | 'air';
+type BlockType = 'brick' | 'question' | 'coin' | 'goomba' | 'empty';
 
 interface Block {
   id: number;
@@ -21,17 +21,18 @@ export const MiniGame: React.FC<MiniGameProps> = ({ onFinish }) => {
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [gameWon, setGameWon] = useState(false);
-  const [msg, setMsg] = useState("¡Minar para entrar!");
+  const [msg, setMsg] = useState("¡Hit the Blocks!");
 
-  const playSound = (type: 'win' | 'explode' | 'click') => {
+  const playSound = (type: 'win' | 'lose' | 'hit' | 'coin') => {
     try {
       let src = '';
       if (type === 'win') src = config.winSound;
-      if (type === 'explode') src = config.loseSound;
-      if (type === 'click') src = config.buttonSound;
+      if (type === 'lose') src = config.loseSound;
+      if (type === 'hit') src = config.buttonSound; // Jump sound
+      if (type === 'coin') src = config.typingSound; // Coin sound
 
       const audio = new Audio(src);
-      audio.volume = 0.6;
+      audio.volume = 0.5;
       audio.play().catch(e => console.log("Audio play failed", e));
     } catch (e) {
       console.error("Audio error", e);
@@ -46,12 +47,12 @@ export const MiniGame: React.FC<MiniGameProps> = ({ onFinish }) => {
   const initGame = () => {
     const newBlocks: Block[] = [];
     for (let i = 0; i < 16; i++) {
-      // Chance: 20% Diamond, 20% TNT, 60% Dirt/Stone
+      // Chance: 20% Coin, 20% Goomba, 60% Brick/Question
       const rand = Math.random();
-      let type: BlockType = 'dirt';
-      if (rand < 0.2) type = 'diamond';
-      else if (rand < 0.4) type = 'tnt';
-      else if (rand < 0.7) type = 'stone';
+      let type: BlockType = 'brick';
+      if (rand < 0.2) type = 'coin';
+      else if (rand < 0.4) type = 'goomba';
+      else if (rand < 0.7) type = 'question';
 
       newBlocks.push({ id: i, type, isOpen: false });
     }
@@ -59,73 +60,71 @@ export const MiniGame: React.FC<MiniGameProps> = ({ onFinish }) => {
     setScore(0);
     setGameOver(false);
     setGameWon(false);
-    setMsg("¡Encuentra 3 Diamantes!");
+    setMsg("Find 3 Coins!");
   };
 
   const handleBlockClick = (id: number) => {
     if (gameOver || gameWon) return;
 
+    const block = blocks.find(b => b.id === id);
+    if (!block || block.isOpen) return;
+
+    // Play jump sound immediately
+    playSound('hit');
+
     setBlocks(prev => prev.map(b => {
-      if (b.id === id && !b.isOpen) {
+      if (b.id === id) {
         return { ...b, isOpen: true };
       }
       return b;
     }));
 
-    const block = blocks.find(b => b.id === id);
-    if (!block || block.isOpen) return;
-
-    if (block.type === 'tnt') {
-      playSound('explode');
+    if (block.type === 'goomba') {
+      setTimeout(() => playSound('lose'), 200);
       setGameOver(true);
-      setMsg("¡BOOM! Perdiste.");
+      setMsg("Oh no! Goomba!");
       // Reveal all
       setBlocks(prev => prev.map(b => ({ ...b, isOpen: true })));
-    } else if (block.type === 'diamond') {
+    } else if (block.type === 'coin') {
+      setTimeout(() => playSound('coin'), 100);
       const newScore = score + 1;
       setScore(newScore);
       
       if (newScore >= 3) {
-        playSound('win');
+        setTimeout(() => playSound('win'), 500);
         setGameWon(true);
-        setMsg("¡GANASTE! Asistencia Confirmada.");
+        setMsg("COURSE CLEAR!");
         // Reveal all
         setBlocks(prev => prev.map(b => ({ ...b, isOpen: true })));
-      } else {
-        playSound('click');
       }
-    } else {
-      // Empty block sound
-      playSound('click');
-    }
-  };
-
-  const getBlockColor = (type: BlockType) => {
-    switch (type) {
-      case 'dirt': return 'bg-[#5c4033]'; // Brown
-      case 'stone': return 'bg-[#757575]'; // Gray
-      case 'diamond': return 'bg-[#00ffff]'; // Cyan
-      case 'tnt': return 'bg-red-600'; // Red
-      default: return 'bg-transparent';
     }
   };
 
   const renderContent = (type: BlockType) => {
-    if (type === 'diamond') return <div className="animate-bounce text-2xl">💎</div>;
-    if (type === 'tnt') return <div className="text-xl font-bold text-black">TNT</div>;
+    if (type === 'coin') return <div className="animate-bounce text-2xl text-yellow-400 drop-shadow-md">🟡</div>; // Coin
+    if (type === 'goomba') return <div className="text-2xl text-amber-900">🍄</div>; // Goomba lookalike
+    if (type === 'question' || type === 'brick') return <div className="text-gray-400 text-xs">EMPTY</div>;
     return null;
   };
 
   return (
-    <div className="min-h-screen bg-black flex flex-col items-center justify-center p-4">
-      <div className="text-center mb-6 z-10">
-        <h2 className={`text-4xl mb-2 ${gameOver ? 'text-red-500' : 'text-yellow-400'}`}>
-          {msg}
-        </h2>
-        <div className="text-2xl text-white">Diamantes: {score}/3</div>
+    <div className="min-h-screen bg-[#5C94FC] flex flex-col items-center justify-center p-4">
+      
+      {/* Header UI */}
+      <div className="flex justify-between w-full max-w-md mb-8 px-4 text-white uppercase font-bold drop-shadow-md text-xl">
+        <div>SCORE</div>
+        <div className="text-yellow-300">x {score}</div>
+        <div>TIME</div>
+        <div>∞</div>
       </div>
 
-      <div className="grid grid-cols-4 gap-2 mb-8 bg-[#373737] p-2 border-4 border-[#7e7e7e]">
+      <div className="text-center mb-6 z-10">
+        <h2 className={`text-2xl mb-2 bg-black/20 p-2 rounded ${gameOver ? 'text-red-600' : 'text-white'}`}>
+          {msg}
+        </h2>
+      </div>
+
+      <div className="grid grid-cols-4 gap-2 mb-8 bg-black/10 p-4 rounded-xl">
         {blocks.map((block) => (
           <button
             key={block.id}
@@ -133,42 +132,43 @@ export const MiniGame: React.FC<MiniGameProps> = ({ onFinish }) => {
             disabled={block.isOpen || gameOver || gameWon}
             className={`
               w-16 h-16 sm:w-20 sm:h-20 
-              border-4 
+              border-4 border-black
               flex items-center justify-center
               transition-all duration-100
+              rounded-lg
+              ${!block.isOpen ? 'shadow-[4px_4px_0px_rgba(0,0,0,0.3)] active:translate-y-1 active:shadow-none' : ''}
               ${block.isOpen 
-                ? `${getBlockColor(block.type)} border-black/20 inner-shadow` 
-                : 'bg-[#5c4033] border-[#3e2b22] hover:bg-[#6d4c3d]'
+                ? 'bg-[#bcafa5]' 
+                : 'bg-[#FBD000]'
               }
             `}
-            style={!block.isOpen ? {
-               backgroundImage: `url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4IiBoZWlnaHQ9IjgiPjxyZWN0IHdpZHRoPSI4IiBoZWlnaHQ9IjgiIGZpbGw9IiM1YzQwMzMiLz48cmVjdCB4PSIyIiB5PSIyIiB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjNmQ0YzNkIi8+PC9zdmc+')`,
-               backgroundSize: '100% 100%',
-               imageRendering: 'pixelated'
-            } : {}}
           >
-            {block.isOpen && renderContent(block.type)}
+            {!block.isOpen ? (
+                <div className="text-3xl font-bold text-[#b39200] animate-pulse">?</div>
+            ) : (
+                renderContent(block.type)
+            )}
           </button>
         ))}
       </div>
 
       {gameWon && (
         <div className="animate-bounce">
-            <Button onClick={onFinish} variant="primary">
-               IR AL INICIO <Check className="inline ml-2"/>
+            <Button onClick={onFinish} variant="primary" className="bg-green-500 border-white">
+               FINISH LEVEL <Star className="inline ml-2 w-4 h-4"/>
             </Button>
         </div>
       )}
 
       {gameOver && (
-        <Button onClick={initGame} variant="secondary">
-          INTENTAR DE NUEVO
+        <Button onClick={initGame} variant="danger">
+          TRY AGAIN
         </Button>
       )}
 
       {!gameOver && !gameWon && (
-        <div className="text-gray-500 text-sm mt-4">
-          Cuidado con la TNT...
+        <div className="text-white text-[10px] mt-4 animate-pulse">
+          Watch out for Goombas!
         </div>
       )}
     </div>

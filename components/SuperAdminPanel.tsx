@@ -20,112 +20,111 @@ export const SuperAdminPanel: React.FC<SuperAdminPanelProps> = ({ onLogout }) =>
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
     updateConfig(tempConfig);
-    setMsg('¡Configuración guardada exitosamente!');
+    setMsg('SAVED!');
     setTimeout(() => setMsg(''), 3000);
   };
 
   const handleReset = () => {
-    if (window.confirm("¿Estás seguro de restaurar los valores por defecto?")) {
+    if (window.confirm("Reset to Factory Settings?")) {
         resetConfig();
-        setTempConfig(config); // Sync local state might need a refresh or just rely on effect, but here we manually sync after reset
-        window.location.reload(); // Simple reload to ensure clean state
+        setTempConfig(config); 
+        window.location.reload(); 
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#1a1a1a] p-4 pb-20">
+    <div className="min-h-screen bg-[#000] p-4 pb-20 font-sans">
       <div className="max-w-2xl mx-auto">
-        <div className="flex justify-between items-center mb-6 border-b-4 border-[#555] pb-4">
-          <h1 className="text-3xl text-purple-400">SUPER ADMIN - CONFIG</h1>
-          <Button onClick={onLogout} variant="danger" className="text-sm px-4 py-2">
-            <LogOut className="w-4 h-4 mr-2 inline" /> SALIR
+        <div className="flex justify-between items-center mb-6 border-b-4 border-white pb-4">
+          <h1 className="text-xl text-white font-bold" style={{ fontFamily: "'Press Start 2P'" }}>WARP ZONE (CONFIG)</h1>
+          <Button onClick={onLogout} variant="danger" className="text-xs px-3 py-2">
+            <LogOut className="w-3 h-3 mr-2 inline" /> QUIT
           </Button>
         </div>
 
-        <div className="minecraft-panel p-1 bg-[#C6C6C6]">
-          <div className="border-4 border-[#373737] p-6 bg-[#C6C6C6]">
+        <div className="mario-panel p-6 bg-white border-4 border-white rounded-lg">
              
              {msg && (
-                 <div className="bg-green-500 text-white p-2 mb-4 border-2 border-black text-center animate-bounce">
+                 <div className="bg-green-500 text-white p-2 mb-4 border-2 border-black text-center animate-bounce font-bold">
                      {msg}
                  </div>
              )}
 
-             <form onSubmit={handleSave} className="space-y-4">
+             <form onSubmit={handleSave} className="space-y-4 text-xs">
                 
                 <div className="space-y-2">
-                   <label className="block text-lg font-bold text-[#373737]">Imagen de Portada (URL)</label>
+                   <label className="block font-bold text-black uppercase">Cover Image (URL)</label>
                    <input 
                       type="text"
-                      className="minecraft-input w-full p-2 border-2 border-black"
+                      className="mario-input w-full p-3 border-2 border-black bg-gray-100"
                       value={tempConfig.coverImage}
                       onChange={e => handleChange('coverImage', e.target.value)}
                    />
                    {tempConfig.coverImage && (
-                       <div className="h-20 w-full overflow-hidden border-2 border-black">
+                       <div className="h-20 w-full overflow-hidden border-2 border-black mt-2 rounded">
                            <img src={tempConfig.coverImage} alt="Preview" className="h-full w-full object-cover" />
                        </div>
                    )}
                 </div>
 
-                <hr className="border-[#7e7e7e] my-4" />
-                <h3 className="text-xl font-bold text-[#373737]">Sonidos (URLs)</h3>
+                <hr className="border-black/20 my-4" />
+                <h3 className="text-sm font-bold text-red-600 uppercase">Audio Assets</h3>
 
                 <div className="space-y-2">
-                   <label className="block text-sm text-[#555]">Música de Fondo</label>
+                   <label className="block text-gray-600 uppercase">BGM (Music)</label>
                    <input 
                       type="text"
-                      className="minecraft-input w-full p-2 border-2 border-black"
+                      className="mario-input w-full p-2 border-2 border-black bg-gray-100"
                       value={tempConfig.bgMusic}
                       onChange={e => handleChange('bgMusic', e.target.value)}
                    />
                 </div>
 
                 <div className="space-y-2">
-                   <label className="block text-sm text-[#555]">Escribir (Madera)</label>
+                   <label className="block text-gray-600 uppercase">Type / Coin Sound</label>
                    <input 
                       type="text"
-                      className="minecraft-input w-full p-2 border-2 border-black"
+                      className="mario-input w-full p-2 border-2 border-black bg-gray-100"
                       value={tempConfig.typingSound}
                       onChange={e => handleChange('typingSound', e.target.value)}
                    />
                 </div>
 
                 <div className="space-y-2">
-                   <label className="block text-sm text-[#555]">Botones (Click)</label>
+                   <label className="block text-gray-600 uppercase">Jump / Click Sound</label>
                    <input 
                       type="text"
-                      className="minecraft-input w-full p-2 border-2 border-black"
+                      className="mario-input w-full p-2 border-2 border-black bg-gray-100"
                       value={tempConfig.buttonSound}
                       onChange={e => handleChange('buttonSound', e.target.value)}
                    />
                 </div>
 
                 <div className="space-y-2">
-                   <label className="block text-sm text-[#555]">Victoria (Juego)</label>
+                   <label className="block text-gray-600 uppercase">Stage Clear</label>
                    <input 
                       type="text"
-                      className="minecraft-input w-full p-2 border-2 border-black"
+                      className="mario-input w-full p-2 border-2 border-black bg-gray-100"
                       value={tempConfig.winSound}
                       onChange={e => handleChange('winSound', e.target.value)}
                    />
                 </div>
 
                 <div className="space-y-2">
-                   <label className="block text-sm text-[#555]">Derrota / Explosión (Juego)</label>
+                   <label className="block text-gray-600 uppercase">Game Over / Hit</label>
                    <input 
                       type="text"
-                      className="minecraft-input w-full p-2 border-2 border-black"
+                      className="mario-input w-full p-2 border-2 border-black bg-gray-100"
                       value={tempConfig.loseSound}
                       onChange={e => handleChange('loseSound', e.target.value)}
                    />
                 </div>
                 
                  <div className="space-y-2">
-                   <label className="block text-sm text-[#555]">Éxito Formulario (Aldeano/LevelUp)</label>
+                   <label className="block text-gray-600 uppercase">1-Up / Success</label>
                    <input 
                       type="text"
-                      className="minecraft-input w-full p-2 border-2 border-black"
+                      className="mario-input w-full p-2 border-2 border-black bg-gray-100"
                       value={tempConfig.submitSound}
                       onChange={e => handleChange('submitSound', e.target.value)}
                    />
@@ -133,18 +132,17 @@ export const SuperAdminPanel: React.FC<SuperAdminPanelProps> = ({ onLogout }) =>
 
                 <div className="pt-6 flex gap-4">
                     <Button type="submit" fullWidth>
-                        <Save className="inline mr-2 w-5 h-5" /> GUARDAR
+                        <Save className="inline mr-2 w-4 h-4" /> SAVE GAME
                     </Button>
                 </div>
              </form>
 
-             <div className="mt-4 pt-4 border-t-2 border-[#7e7e7e]">
-                 <Button variant="danger" onClick={handleReset} fullWidth className="text-sm">
-                    <RotateCcw className="inline mr-2 w-4 h-4" /> RESTAURAR VALORES POR DEFECTO
+             <div className="mt-4 pt-4 border-t-2 border-gray-200">
+                 <Button variant="danger" onClick={handleReset} fullWidth className="text-xs">
+                    <RotateCcw className="inline mr-2 w-3 h-3" /> RESET CARTRIDGE
                  </Button>
              </div>
 
-          </div>
         </div>
       </div>
     </div>

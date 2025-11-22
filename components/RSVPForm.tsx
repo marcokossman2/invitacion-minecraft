@@ -19,10 +19,9 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ onSubmit, onBack }) => {
   const playTypingSound = () => {
     try {
       const audio = new Audio(config.typingSound);
-      audio.volume = 0.3; 
-      // Randomize pitch slightly for variety
-      audio.playbackRate = 0.9 + Math.random() * 0.4; 
-      audio.play().catch(() => {}); // Ignore auto-play errors if rapid typing
+      audio.volume = 0.2; 
+      audio.currentTime = 0;
+      audio.play().catch(() => {}); 
     } catch (e) {
       // Silent fail
     }
@@ -45,36 +44,43 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ onSubmit, onBack }) => {
       // Delay slightly for the sound to be heard
       setTimeout(() => {
         onSubmit(formData);
-      }, 800);
+      }, 1000);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-[#1a1a1a]">
-      {/* Bedrock Pattern Background */}
+    <div className="min-h-screen flex items-center justify-center p-4 bg-[#000]">
+      {/* Brick Pattern Background */}
        <div 
-        className="absolute inset-0 z-0 opacity-20" 
+        className="absolute inset-0 z-0 opacity-100" 
         style={{
-          backgroundImage: `repeating-linear-gradient(45deg, #444 25%, transparent 25%, transparent 75%, #444 75%, #444), repeating-linear-gradient(45deg, #444 25%, #222 25%, #222 75%, #444 75%, #444)`,
-          backgroundPosition: '0 0, 10px 10px',
-          backgroundSize: '20px 20px'
+          backgroundColor: '#b33917',
+          backgroundImage: `
+            linear-gradient(335deg, rgba(0,0,0,0.3) 23px, transparent 23px),
+            linear-gradient(155deg, rgba(0,0,0,0.3) 23px, transparent 23px),
+            linear-gradient(335deg, rgba(0,0,0,0.3) 23px, transparent 23px),
+            linear-gradient(155deg, rgba(0,0,0,0.3) 23px, transparent 23px)
+          `,
+          backgroundSize: '58px 58px',
+          backgroundPosition: '0px 2px, 4px 35px, 29px 31px, 34px 6px'
         }}
       />
 
       <div className="relative z-10 w-full max-w-md">
-        <div className="minecraft-panel p-1 bg-[#C6C6C6]">
-          <div className="border-4 border-[#373737] p-6 bg-[#C6C6C6]">
+        <div className="mario-panel p-8">
             
-            <h2 className="text-3xl text-center mb-6 text-[#373737]">CONFIRMACIÓN</h2>
+            <h2 className="text-2xl text-center mb-6 text-[#E52521] drop-shadow-sm">
+                PLAYER SELECT
+            </h2>
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
-                <label className="block text-xl text-[#555]">Nombre y Apellido</label>
+                <label className="block text-xs uppercase font-bold text-black">Tu Nombre (Player 1)</label>
                 <input
                   required
                   type="text"
-                  className="minecraft-input w-full p-3 text-xl focus:outline-none focus:ring-4 focus:ring-[#3C8527] border-4 border-[#555]"
-                  placeholder="Steve..."
+                  className="mario-input w-full p-3 focus:outline-none focus:ring-4 focus:ring-[#FBD000]"
+                  placeholder="Mario..."
                   value={formData.fullName}
                   onKeyDown={playTypingSound}
                   onChange={e => setFormData({...formData, fullName: e.target.value})}
@@ -82,12 +88,12 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ onSubmit, onBack }) => {
               </div>
 
               <div className="space-y-2">
-                <label className="block text-xl text-[#555]">Dirección</label>
+                <label className="block text-xs uppercase font-bold text-black">Dirección</label>
                 <input
                   required
                   type="text"
-                  className="minecraft-input w-full p-3 text-xl focus:outline-none focus:ring-4 focus:ring-[#3C8527] border-4 border-[#555]"
-                  placeholder="Calle Falsa 123..."
+                  className="mario-input w-full p-3 focus:outline-none focus:ring-4 focus:ring-[#FBD000]"
+                  placeholder="Castillo de Peach..."
                   value={formData.address}
                   onKeyDown={playTypingSound}
                   onChange={e => setFormData({...formData, address: e.target.value})}
@@ -95,11 +101,11 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ onSubmit, onBack }) => {
               </div>
 
               <div className="space-y-2">
-                <label className="block text-xl text-[#555]">WhatsApp</label>
+                <label className="block text-xs uppercase font-bold text-black">WhatsApp</label>
                 <input
                   required
                   type="tel"
-                  className="minecraft-input w-full p-3 text-xl focus:outline-none focus:ring-4 focus:ring-[#3C8527] border-4 border-[#555]"
+                  className="mario-input w-full p-3 focus:outline-none focus:ring-4 focus:ring-[#FBD000]"
                   placeholder="11 1234 5678"
                   value={formData.whatsapp}
                   onKeyDown={playTypingSound}
@@ -108,16 +114,15 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ onSubmit, onBack }) => {
               </div>
 
               <div className="pt-4 flex flex-col gap-3">
-                <Button type="submit" fullWidth>
-                  ENVIAR Y JUGAR
+                <Button type="submit" fullWidth className="bg-[#FBD000] text-black border-black">
+                  LET'S GO!
                 </Button>
-                <Button type="button" variant="secondary" fullWidth onClick={onBack}>
-                  VOLVER
+                <Button type="button" variant="danger" fullWidth onClick={onBack}>
+                  BACK
                 </Button>
               </div>
             </form>
 
-          </div>
         </div>
       </div>
     </div>

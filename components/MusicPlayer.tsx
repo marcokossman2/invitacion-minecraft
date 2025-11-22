@@ -58,18 +58,15 @@ export const MusicPlayer: React.FC = () => {
       <button 
         onClick={togglePlay}
         className={`
-            minecraft-btn flex items-center justify-center
+            mario-btn flex items-center justify-center
             w-12 h-12
-            border-4 border-black
-            ${isPlaying ? 'bg-[#3C8527]' : 'bg-[#7E7E7E]'}
-            text-white
-            shadow-lg
-            hover:brightness-110
-            transition-all
+            ${isPlaying ? 'bg-[#FBD000]' : 'bg-gray-400'}
+            text-black
+            hover:scale-110
         `}
-        title={isPlaying ? "Silenciar música" : "Reproducir música"}
+        title={isPlaying ? "Mute" : "Play Music"}
       >
-        {isPlaying ? <Volume2 size={24} /> : <VolumeX size={24} />}
+        {isPlaying ? <Volume2 size={20} /> : <VolumeX size={20} />}
       </button>
       <audio 
         ref={audioRef} 

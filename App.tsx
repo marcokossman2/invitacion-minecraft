@@ -103,33 +103,33 @@ const AppContent: React.FC = () => {
        )}
 
        {view === 'admin-login' && (
-         <div className="min-h-screen flex items-center justify-center bg-[#1a1a1a] p-4">
-            <div className="minecraft-panel p-1 bg-[#C6C6C6]">
-               <div className="border-4 border-[#373737] p-8 bg-[#C6C6C6] max-w-sm w-full">
-                  <h2 className="text-2xl text-center mb-4 text-black">ADMIN LOGIN</h2>
+         <div className="min-h-screen flex items-center justify-center bg-[#000] p-4">
+            <div className="mario-panel p-1 bg-white">
+               <div className="border-4 border-black p-8 bg-white max-w-sm w-full rounded-lg">
+                  <h2 className="text-lg text-center mb-4 text-red-600 font-bold uppercase">Secret Pipe Entrance</h2>
                   <form onSubmit={handleAdminLogin} className="space-y-4">
                      <input 
                        type="text" 
-                       placeholder="Usuario"
-                       className="minecraft-input w-full p-2 border-2 border-black text-white"
+                       placeholder="User"
+                       className="mario-input w-full p-2 border-2 border-black text-black bg-gray-100"
                        value={adminUser}
                        onChange={e => setAdminUser(e.target.value)}
                      />
                      <input 
                        type="password" 
-                       placeholder="Contraseña"
-                       className="minecraft-input w-full p-2 border-2 border-black text-white"
+                       placeholder="Password"
+                       className="mario-input w-full p-2 border-2 border-black text-black bg-gray-100"
                        value={adminPass}
                        onChange={e => setAdminPass(e.target.value)}
                      />
-                     {loginError && <p className="text-red-600 text-sm">Credenciales incorrectas.</p>}
+                     {loginError && <p className="text-red-600 text-xs">Access Denied.</p>}
                      
                      <div className="flex gap-2 pt-2">
-                        <Button type="submit" fullWidth>ENTRAR</Button>
+                        <Button type="submit" fullWidth>ENTER</Button>
                      </div>
                      <div className="mt-2">
                        <Button type="button" variant="secondary" fullWidth onClick={() => setView('invitation')}>
-                         CANCELAR
+                         EXIT
                        </Button>
                      </div>
                   </form>

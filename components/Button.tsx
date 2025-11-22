@@ -17,9 +17,9 @@ export const Button: React.FC<ButtonProps> = ({
   ...props 
 }) => {
   const { config } = useConfig();
-  let bgClass = 'bg-[#7E7E7E] text-white'; // Default gray
-  if (variant === 'primary') bgClass = 'bg-[#3C8527] text-white'; // Green
-  if (variant === 'danger') bgClass = 'bg-[#AA0000] text-white'; // Red
+  let bgClass = 'bg-[#E52521] text-white'; // Mario Red
+  if (variant === 'secondary') bgClass = 'bg-[#43B047] text-white'; // Luigi Green
+  if (variant === 'danger') bgClass = 'bg-[#000000] text-white'; // Bullet Bill Black
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (playSound) {
@@ -35,13 +35,11 @@ export const Button: React.FC<ButtonProps> = ({
   return (
     <button
       className={`
-        minecraft-btn 
-        px-6 py-3 
-        text-xl md:text-2xl 
-        border-4 border-black 
-        active:translate-y-1
-        transition-transform
-        uppercase tracking-widest
+        mario-btn 
+        px-6 py-4
+        text-sm md:text-base 
+        font-bold
+        uppercase tracking-wider
         ${bgClass}
         ${fullWidth ? 'w-full' : ''}
         ${className}

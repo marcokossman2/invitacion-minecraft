@@ -9,8 +9,8 @@ export interface Guest {
 export type ViewState = 'invitation' | 'rsvp' | 'game' | 'admin-login' | 'admin-panel' | 'super-admin-panel';
 
 export interface GameScore {
-  diamonds: number;
-  creepers: number;
+  coins: number;
+  goombas: number;
 }
 
 export interface AppConfig {

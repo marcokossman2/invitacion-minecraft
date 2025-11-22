@@ -2,19 +2,20 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { AppConfig } from '../types';
 
 const DEFAULT_CONFIG: AppConfig = {
-  coverImage: 'https://images.unsplash.com/photo-1599009434802-ca1dd09895e7?q=80&w=1000&auto=format&fit=crop',
-  // Stable 8-bit background music from Internet Archive
-  bgMusic: 'https://ia800504.us.archive.org/11/items/OneStop_8bit/03_OneStop_8bit_Pop.mp3',
-  // Wood tap sound for typing (Mixkit)
-  typingSound: 'https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3',
-  // UI Click sound (Mixkit)
-  buttonSound: 'https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3',
-  // Win/Success Arcade sound (Mixkit)
-  winSound: 'https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3',
-  // 8-bit Explosion (Mixkit)
-  loseSound: 'https://assets.mixkit.co/active_storage/sfx/1698/1698-preview.mp3',
-  // Magical Success / Level Up style (Mixkit)
-  submitSound: 'https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3'
+  // Mario Theme Cover
+  coverImage: 'https://images.unsplash.com/photo-1605901309584-818e25960b8f?q=80&w=1000&auto=format&fit=crop', 
+  // Upbeat 8-bit platformer music
+  bgMusic: 'https://assets.mixkit.co/active_storage/sfx/2515/2515-preview.mp3', 
+  // Coin sound for typing
+  typingSound: 'https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3', 
+  // Jump sound for buttons
+  buttonSound: 'https://assets.mixkit.co/active_storage/sfx/2044/2044-preview.mp3', 
+  // Level Clear / Star power
+  winSound: 'https://assets.mixkit.co/active_storage/sfx/1064/1064-preview.mp3', 
+  // Game Over / Damage
+  loseSound: 'https://assets.mixkit.co/active_storage/sfx/2043/2043-preview.mp3', 
+  // 1-Up / Power Up
+  submitSound: 'https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3' 
 };
 
 interface ConfigContextType {
